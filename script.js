@@ -18,9 +18,12 @@ var config = {
 
 var map;
 var player;
+var stars;
 var platforms;
 var chao;
 var cursors;
+var score = 0;
+var scoreText;
 
 var game = new Phaser.Game(config);
 
@@ -46,15 +49,16 @@ function create ()
     this.add.image(2800, 300, 'sky');
     this.add.image(3600, 300, 'sky');
     
-    // plataformas
     platforms = this.physics.add.staticGroup();
     chao = this.physics.add.staticGroup();
-
+    
+    // chão
     platforms.create(400, 568, 'chao').setScale(2).refreshBody();
     platforms.create(1100, 568, 'chao').setScale(2).refreshBody();
     platforms.create(2500, 568, 'chao').setScale(2).refreshBody();
     platforms.create(3500, 568, 'chao').setScale(2).refreshBody();
     
+    // plataformas
     platforms.create(600, 450, 'ground');
     platforms.create(1000, 350, 'ground');
     platforms.create(1400, 250, 'ground');
@@ -74,9 +78,11 @@ function create ()
     this.cameras.main.setBounds(0,0,1920*2, 700);
     this.physics.world.setBounds(0,0,1920*2,700);
     this.cameras.main.startFollow(player, true, 0.05, 0.05);
-
+    
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
+    
+    this.physics.add.collider(player, platforms);
 
     // Animações
     this.anims.create({
@@ -100,12 +106,40 @@ function create ()
     });
 
     cursors = this.input.keyboard.createCursorKeys();
+    
+    
+    // Estrelas
+    
+    // grupo de 30 estrelas, a cada 205 px, a partir de 1000 px do inicio de x
+    stars = this.physics.add.group({
+        key: 'star',
+        repeat: 30,
+        setXY: { x: 1000, y: 0, stepX: 205 }
+    });
+    
+    /*
+    // loop entre o grupo de estrelas
+    stars.children.iterate(function (child) {
+        
+        // seta a quicada da estrela entre 0.4 e 0.8
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    });
+    */
 
-    this.physics.add.collider(player, platforms);
+   scoreText = this.add.text(100, 100, 'score: 0', { fontSize: '32px', fill: '#000' });
+   
+   // adiciona colisão entre as estrelas e as plataformas
+   this.physics.add.collider(stars, platforms);
+   
+   // quando player sobrepor uma estrela, chama o metodo collectStar
+   this.physics.add.overlap(player, stars, collectStar, null, this);
 }
 
 function update ()
 {
+
+    scoreText.x = player.x;
+
     if (cursors.left.isDown)
     {
         player.setVelocityX(-160);
@@ -129,4 +163,13 @@ function update ()
     {
         player.setVelocityY(-330);
     }
+}
+
+// desativa estrela sobreposta pelo player
+function collectStar (player, star)
+{
+    star.disableBody(true, true);
+
+    score += 10;
+    scoreText.setText('Score: ' + score);
 }
