@@ -15,6 +15,7 @@ var config = {
         update: update
     }
 };
+var teclaEsc;
 
 var game;
 var map;
@@ -33,11 +34,29 @@ function iniciarJogo(){
     game = new Phaser.Game(config);
 }
 
+function sairJogo(){
+
+    window.location.href = '';
+}
+
 function configuracoes(){
+    
+    let canvas = document.getElementsByTagName('canvas')[0];
 
-    document.getElementById('dvMenu').style.display = 'none';
+    if(canvas.style.display == ''){
 
-    document.getElementById('dvMenuConfiguracoes').style.display = '';
+        document.getElementById('dvMenu').style.display = 'none';
+
+        document.getElementById('dvMenuConfiguracoes').style.display = '';
+
+        canvas.style.display = 'none';
+    
+    }else{
+
+        document.getElementById('dvMenuConfiguracoes').style.display = 'none';
+        
+        canvas.style.display = '';
+    }
 }
 
 function preload ()
@@ -118,6 +137,8 @@ function create ()
         repeat: -1
     });
 
+    teclaEsc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+
     cursors = this.input.keyboard.createCursorKeys();
     
     
@@ -156,11 +177,17 @@ function update ()
 
     scoreText.x = player.x;
 
+    
     if(player.y > 650){
 
         alert('morreu!');
 
-        window.location = "localhost";
+        window.location.href = "localhost";
+    }
+
+    if(Phaser.Input.Keyboard.JustDown(teclaEsc)){
+
+        configuracoes();
     }
 
     if (cursors.left.isDown)
