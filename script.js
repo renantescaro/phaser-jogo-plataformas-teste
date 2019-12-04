@@ -16,6 +16,7 @@ var config = {
     }
 };
 
+var game;
 var map;
 var player;
 var stars;
@@ -25,7 +26,19 @@ var cursors;
 var score = 0;
 var scoreText;
 
-var game = new Phaser.Game(config);
+function iniciarJogo(){
+
+    document.getElementById('dvMenu').style.display = 'none';
+
+    game = new Phaser.Game(config);
+}
+
+function configuracoes(){
+
+    document.getElementById('dvMenu').style.display = 'none';
+
+    document.getElementById('dvMenuConfiguracoes').style.display = '';
+}
 
 function preload ()
 {
@@ -128,6 +141,9 @@ function create ()
 
    scoreText = this.add.text(100, 100, 'score: 0', { fontSize: '32px', fill: '#000' });
    
+
+   //scoreText.startFollow(player, true, 0.05, 0.05);
+
    // adiciona colisão entre as estrelas e as plataformas
    this.physics.add.collider(stars, platforms);
    
@@ -139,6 +155,13 @@ function update ()
 {
 
     scoreText.x = player.x;
+
+    if(player.y > 650){
+
+        alert('morreu!');
+
+        window.location = "localhost";
+    }
 
     if (cursors.left.isDown)
     {
