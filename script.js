@@ -21,6 +21,7 @@ var game;
 var map;
 var player;
 var stars;
+var biblias;
 var platforms;
 var chao;
 var cursors;
@@ -28,55 +29,10 @@ var score = 0;
 var vida = 100;
 var scoreText;
 
-function iniciarJogo(){
-
-    document.getElementById('dvMenu').style.display = 'none';
-
-    document.body.style.backgroundColor = '#000';
-
-    game = new Phaser.Game(config);
-}
-
-function sairJogo(){
-
-    window.location.href = '';
-}
-
-function reiniciar(){
-
-    window.location.href = '';
-}
-
-function morrer(){
-    document.body.style.backgroundColor = '#900';
-
-    document.getElementsByTagName('canvas')[0].style.display = 'none';
-    document.getElementById('morte').style.display = '';
-}
-
-function configuracoes(){
-    
-    let canvas = document.getElementsByTagName('canvas')[0];
-
-    if(canvas.style.display == ''){
-
-        document.getElementById('dvMenu').style.display = 'none';
-
-        document.getElementById('dvMenuConfiguracoes').style.display = '';
-
-        canvas.style.display = 'none';
-    
-    }else{
-
-        document.getElementById('dvMenuConfiguracoes').style.display = 'none';
-        
-        canvas.style.display = '';
-    }
-}
-
 function preload ()
 {
     this.load.image('sky', 'assets/sky.png');
+    this.load.image('biblia', 'assets/biblia.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('groundPequeno', 'assets/platformPequenaa.png');
     this.load.image('chao', 'assets/chao.png');
@@ -166,6 +122,8 @@ function create ()
         setXY: { x: 1000, y: 0, stepX: 205 }
     });
     
+    biblias = this.physics.add.group();
+
     /*
     // loop entre o grupo de estrelas
     stars.children.iterate(function (child) {
@@ -182,9 +140,11 @@ function create ()
 
    // adiciona colisão entre as estrelas e as plataformas
    this.physics.add.collider(stars, platforms);
+   this.physics.add.collider(biblias, platforms);
    
    // quando player sobrepor uma estrela, chama o metodo collectStar
    this.physics.add.overlap(player, stars, collectStar, null, this);
+   this.physics.add.overlap(player, biblias, encostarBiblia, null, this)
 }
 
 function update ()
@@ -232,5 +192,64 @@ function collectStar (player, star)
     star.disableBody(true, true);
 
     score += 10;
-    scoreText.setText('Score: ' + score + ' Vida: ' + vida);
+    scoreText.setText('Pontos: ' + score + ' Vida: ' + vida);
+
+    var biblia = biblias.create(10, 300, 'biblia');
+    biblia.setBounce(1);
+    biblia.setCollideWorldBounds(true);
+    biblia.setVelocity(Phaser.Math.Between(-200, 200), 20);
+}
+
+function encostarBiblia(player, biblia){
+
+    vida -= 20;
+    scoreText.setText('Pontos: ' + score + ' Vida: ' + vida);
+}
+
+// ***************************************************
+
+function iniciarJogo(){
+
+    document.getElementById('dvMenu').style.display = 'none';
+
+    document.body.style.backgroundColor = '#000';
+
+    game = new Phaser.Game(config);
+}
+
+function sairJogo(){
+
+    window.location.href = '';
+}
+
+function reiniciar(){
+
+    window.location.href = '';
+}
+
+function morrer(){
+    document.body.style.backgroundColor = '#900';
+
+    document.getElementsByTagName('canvas')[0].style.display = 'none';
+    document.getElementById('morte').style.display = '';
+}
+
+function configuracoes(){
+    
+    let canvas = document.getElementsByTagName('canvas')[0];
+
+    if(canvas.style.display == ''){
+
+        document.getElementById('dvMenu').style.display = 'none';
+
+        document.getElementById('dvMenuConfiguracoes').style.display = '';
+
+        canvas.style.display = 'none';
+    
+    }else{
+
+        document.getElementById('dvMenuConfiguracoes').style.display = 'none';
+        
+        canvas.style.display = '';
+    }
 }
