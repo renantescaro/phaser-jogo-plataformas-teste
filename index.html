@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Teste</title>
 </head>
-<body>
+<body style="background-color: #900">
     <div id="dvMenu" style="padding-left: 2%; padding-right: 2%;">
-        <div style="background-color: brown; text-align: center;">
+        <div style="text-align: center;">
             <br>
             <div style="margin: 5%; background-color: burlywood;">
                 <img src="assets/logoGame.png" style="width: 30%;">
@@ -27,10 +27,22 @@
     </div>
 
     <div id="dvMenuConfiguracoes" style="padding-left: 2%; padding-right: 2%; display: none;">
-        <div style="background-color: brown; text-align: center; height: 500px;">
+        <div style="text-align: center; height: 500px;">
             <button onclick="sairJogo()">Sair</button>
         </div>
     </div>
+
+    <div id="morte" style="display: none; text-align: center;">
+        <h1>Você morreu!</h1>
+
+        <br>
+
+        <button onclick="reiniciar()">Reiniciar</button>
+    </div>
+
+    <script>
+
+    </script>
 
     <script src="phaser.min.js"></script>
     <script src="script.js"></script>

@@ -1,7 +1,7 @@
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: window.innerWidth-10,
+    height: window.innerHeight-20,
     physics: {
         default: 'arcade',
         arcade: {
@@ -25,11 +25,14 @@ var platforms;
 var chao;
 var cursors;
 var score = 0;
+var vida = 100;
 var scoreText;
 
 function iniciarJogo(){
 
     document.getElementById('dvMenu').style.display = 'none';
+
+    document.body.style.backgroundColor = '#000';
 
     game = new Phaser.Game(config);
 }
@@ -37,6 +40,18 @@ function iniciarJogo(){
 function sairJogo(){
 
     window.location.href = '';
+}
+
+function reiniciar(){
+
+    window.location.href = '';
+}
+
+function morrer(){
+    document.body.style.backgroundColor = '#900';
+
+    document.getElementsByTagName('canvas')[0].style.display = 'none';
+    document.getElementById('morte').style.display = '';
 }
 
 function configuracoes(){
@@ -160,7 +175,7 @@ function create ()
     });
     */
 
-   scoreText = this.add.text(100, 100, 'score: 0', { fontSize: '32px', fill: '#000' });
+   scoreText = this.add.text(100, 100, 'Pontos: 0  Vida: 100', { fontSize: '32px', fill: '#000' });
    
 
    //scoreText.startFollow(player, true, 0.05, 0.05);
@@ -174,15 +189,11 @@ function create ()
 
 function update ()
 {
-
     scoreText.x = player.x;
-
     
     if(player.y > 650){
 
-        alert('morreu!');
-
-        window.location.href = "localhost";
+        morrer();
     }
 
     if(Phaser.Input.Keyboard.JustDown(teclaEsc)){
@@ -221,5 +232,5 @@ function collectStar (player, star)
     star.disableBody(true, true);
 
     score += 10;
-    scoreText.setText('Score: ' + score);
+    scoreText.setText('Score: ' + score + ' Vida: ' + vida);
 }
