@@ -194,16 +194,21 @@ function collectStar (player, star)
     score += 10;
     scoreText.setText('Pontos: ' + score + ' Vida: ' + vida);
 
-    var biblia = biblias.create(10, 300, 'biblia');
+    var biblia = biblias.create(1, 1, 'biblia');
     biblia.setBounce(1);
     biblia.setCollideWorldBounds(true);
-    biblia.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    biblia.setVelocity(Phaser.Math.Between(-50, 500), 20);
 }
 
 function encostarBiblia(player, biblia){
 
-    vida -= 20;
+    vida -= 5;
     scoreText.setText('Pontos: ' + score + ' Vida: ' + vida);
+
+    if(vida <= 0){
+
+        morrer();
+    }
 }
 
 // ***************************************************
