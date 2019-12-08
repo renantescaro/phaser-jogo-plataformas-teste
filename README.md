@@ -1,4 +1,6 @@
-# Joguinho de musica Russa de pessoas bads
+#The Doomer Game Br
+
+Joguinho de musica Russa de pessoas bads (Versão Brasil)
 
 Testa ai:
 
