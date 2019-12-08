@@ -16,7 +16,7 @@ var config = {
     }
 };
 var teclaEsc;
-
+var teclaPulo;
 var game;
 var map;
 var player;
@@ -28,6 +28,7 @@ var cursors;
 var score = 0;
 var vida = 100;
 var scoreText;
+var nPulos = 0;
 
 function preload ()
 {
@@ -38,7 +39,7 @@ function preload ()
     this.load.image('chao', 'assets/chao.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 49, frameHeight: 137 });
 }
 
 function create ()
@@ -47,10 +48,10 @@ function create ()
     
     // background
     this.add.image(400, 300, 'sky');
-    this.add.image(1200, 300, 'sky');
-    this.add.image(2000, 300, 'sky');
+    this.add.image(1600, 300, 'sky');
     this.add.image(2800, 300, 'sky');
-    this.add.image(3600, 300, 'sky');
+    this.add.image(4000, 300, 'sky');
+    this.add.image(5200, 300, 'sky');
     
     platforms = this.physics.add.staticGroup();
     chao = this.physics.add.staticGroup();
@@ -71,8 +72,10 @@ function create ()
     platforms.create(2650, 350, 'groundPequeno');
     platforms.create(2850, 350, 'groundPequeno');
     platforms.create(3050, 350, 'groundPequeno');
-    platforms.create(3250, 400, 'groundPequeno');
+    platforms.create(3180, 160, 'groundPequeno');
 
+    platforms.create(3250, 400, 'groundPequeno');
+    platforms.create(3450, 450, 'groundPequeno');
     
     // Player
     player = this.physics.add.sprite(100, 450, 'dude');
@@ -82,7 +85,7 @@ function create ()
     this.physics.world.setBounds(0,0,1920*2,700);
     this.cameras.main.startFollow(player, true, 0.05, 0.05);
     
-    player.setBounce(0.2);
+    player.setBounce(0);
     player.setCollideWorldBounds(true);
     
     this.physics.add.collider(player, platforms);
@@ -90,7 +93,7 @@ function create ()
     // Animações
     this.anims.create({
         key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+        frames: this.anims.generateFrameNumbers('dude', { start: -1, end: 3 }),
         frameRate: 10,
         repeat: -1
     });
@@ -109,6 +112,7 @@ function create ()
     });
 
     teclaEsc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+    teclaPulo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     cursors = this.input.keyboard.createCursorKeys();
     
@@ -147,8 +151,13 @@ function create ()
    this.physics.add.overlap(player, biblias, encostarBiblia, null, this)
 }
 
-function update ()
-{
+function update (){
+
+    if(player.body.touching.down){
+
+        nPulos = 0;
+    }
+
     scoreText.x = player.x;
     
     if(player.y > 650){
@@ -161,34 +170,46 @@ function update ()
         configuracoes();
     }
 
-    if (cursors.left.isDown)
-    {
+    if (cursors.left.isDown){
+
         player.setVelocityX(-160);
 
         player.anims.play('left', true);
-    }
-    else if (cursors.right.isDown)
-    {
+
+    }else if (cursors.right.isDown){
+
         player.setVelocityX(160);
 
         player.anims.play('right', true);
-    }
-    else
-    {
+    
+    }else{
+
         player.setVelocityX(0);
 
         player.anims.play('turn');
     }
+    
+    if(Phaser.Input.Keyboard.JustDown(teclaPulo)){
 
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.setVelocityY(-330);
+        if(nPulos == 0 && player.body.touching.down){
+    
+            nPulos++;
+            player.setVelocityY(-330);
+    
+        }
+        
+        if(nPulos == 1 && !player.body.touching.down){
+
+            nPulos++;
+            player.setVelocityY(-330);
+        }
     }
+    
 }
 
 // desativa estrela sobreposta pelo player
-function collectStar (player, star)
-{
+function collectStar (player, star){
+
     star.disableBody(true, true);
 
     score += 10;
@@ -202,12 +223,12 @@ function collectStar (player, star)
 
 function encostarBiblia(player, biblia){
 
-    vida -= 5;
+    vida -= 1;
     scoreText.setText('Pontos: ' + score + ' Vida: ' + vida);
 
     if(vida <= 0){
 
-        morrer();
+        //morrer();
     }
 }
 
