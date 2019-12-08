@@ -47,23 +47,23 @@ function create ()
     // *** Cenário ***
     
     // background
-    this.add.image(400, 300, 'sky');
-    this.add.image(1600, 300, 'sky');
-    this.add.image(2800, 300, 'sky');
-    this.add.image(4000, 300, 'sky');
-    this.add.image(5200, 300, 'sky');
+    this.add.image(400,  330, 'sky');
+    this.add.image(1600, 330, 'sky');
+    this.add.image(2800, 330, 'sky');
+    this.add.image(4000, 330, 'sky');
+    this.add.image(5200, 330, 'sky');
     
     platforms = this.physics.add.staticGroup();
     chao = this.physics.add.staticGroup();
     
     // chão
-    platforms.create(400, 568, 'chao').setScale(2).refreshBody();
-    platforms.create(1100, 568, 'chao').setScale(2).refreshBody();
-    platforms.create(2500, 568, 'chao').setScale(2).refreshBody();
-    platforms.create(3500, 568, 'chao').setScale(2).refreshBody();
+    platforms.create(400, 670,  'chao').setScale(2).refreshBody();
+    platforms.create(1100, 670, 'chao').setScale(2).refreshBody();
+    platforms.create(2500, 670, 'chao').setScale(2).refreshBody();
+    platforms.create(3500, 670, 'chao').setScale(2).refreshBody();
     
     // plataformas
-    platforms.create(600, 450, 'ground');
+    platforms.create(600, 550,  'ground');
     platforms.create(1000, 350, 'ground');
     platforms.create(1400, 250, 'ground');
     platforms.create(2050, 350, 'ground');
@@ -160,7 +160,7 @@ function update (){
 
     scoreText.x = player.x;
     
-    if(player.y > 650){
+    if(player.y > 630){
 
         morrer();
     }
@@ -228,7 +228,7 @@ function encostarBiblia(player, biblia){
 
     if(vida <= 0){
 
-        //morrer();
+        morrer();
     }
 }
 
