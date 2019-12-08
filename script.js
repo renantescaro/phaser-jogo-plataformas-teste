@@ -15,12 +15,14 @@ var config = {
         update: update
     }
 };
+
 var teclaEsc;
 var teclaPulo;
 var game;
 var map;
 var player;
 var stars;
+var corote;
 var biblias;
 var platforms;
 var chao;
@@ -38,6 +40,7 @@ function preload ()
     this.load.image('groundPequeno', 'assets/platformPequenaa.png');
     this.load.image('chao', 'assets/chao.png');
     this.load.image('star', 'assets/star.png');
+    this.load.image('corote', 'assets/corote.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 49, frameHeight: 137 });
 }
@@ -52,31 +55,30 @@ function create ()
     this.add.image(2800, 330, 'sky');
     this.add.image(4000, 330, 'sky');
     this.add.image(5200, 330, 'sky');
-    
+
     platforms = this.physics.add.staticGroup();
     chao = this.physics.add.staticGroup();
     
     // chão
-    platforms.create(400, 670,  'chao').setScale(2).refreshBody();
+    platforms.create(400,  670, 'chao').setScale(2).refreshBody();
     platforms.create(1100, 670, 'chao').setScale(2).refreshBody();
     platforms.create(2500, 670, 'chao').setScale(2).refreshBody();
     platforms.create(3500, 670, 'chao').setScale(2).refreshBody();
     
     // plataformas
-    platforms.create(600, 550,  'ground');
-    platforms.create(1000, 350, 'ground');
-    platforms.create(1400, 250, 'ground');
-    platforms.create(2050, 350, 'ground');
-
-    platforms.create(2450, 350, 'groundPequeno');
-    platforms.create(2650, 350, 'groundPequeno');
-    platforms.create(2850, 350, 'groundPequeno');
-    platforms.create(3050, 350, 'groundPequeno');
-    platforms.create(3180, 160, 'groundPequeno');
-
-    platforms.create(3250, 400, 'groundPequeno');
-    platforms.create(3450, 450, 'groundPequeno');
+    platforms.create(600,  545, 'ground');
+    platforms.create(1000, 360, 'ground');
+    platforms.create(1400, 300, 'ground');
+    platforms.create(2050, 400, 'ground');
+    platforms.create(2450, 400, 'groundPequeno');
+    platforms.create(2650, 400, 'groundPequeno');
+    platforms.create(2850, 400, 'groundPequeno');
+    platforms.create(3050, 450, 'groundPequeno');
+    platforms.create(3180, 230, 'groundPequeno');
+    platforms.create(3580, 230, 'groundPequeno');
     
+    corote = this.physics.add.sprite(3580, 170,'corote');
+
     // Player
     player = this.physics.add.sprite(100, 450, 'dude');
     
@@ -145,10 +147,12 @@ function create ()
    // adiciona colisão entre as estrelas e as plataformas
    this.physics.add.collider(stars, platforms);
    this.physics.add.collider(biblias, platforms);
+   this.physics.add.collider(corote, platforms);
    
    // quando player sobrepor uma estrela, chama o metodo collectStar
    this.physics.add.overlap(player, stars, collectStar, null, this);
    this.physics.add.overlap(player, biblias, encostarBiblia, null, this)
+   this.physics.add.overlap(player, corote, fimFase, null, this)
 }
 
 function update (){
@@ -232,6 +236,15 @@ function encostarBiblia(player, biblia){
     }
 }
 
+function fimFase(player, corote){
+    
+    document.body.style.backgroundColor = '#090';
+
+    document.getElementsByTagName('canvas')[0].style.display = 'none';
+
+    document.getElementById('dvFimFase').style.display = '';
+}
+
 // ***************************************************
 
 function iniciarJogo(){
@@ -254,6 +267,7 @@ function reiniciar(){
 }
 
 function morrer(){
+
     document.body.style.backgroundColor = '#900';
 
     document.getElementsByTagName('canvas')[0].style.display = 'none';
