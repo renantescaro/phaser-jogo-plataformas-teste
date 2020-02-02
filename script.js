@@ -16,24 +16,28 @@ var config = {
     }
 };
 
-var teclaEsc;
-var teclaPulo;
-var game;
-var map;
-var player;
-var stars;
-var corote;
-var biblias;
-var platforms;
-var chao;
-var cursors;
-var score = 0;
-var vida = 100;
-var scoreText;
-var nPulos = 0;
+var teclaEsc
+var teclaPulo
+var game
+var map
+var player
+var stars
+var corote
+var biblias
+var platforms
+var chao
+var cursors
+var score = 0
+var vida = 100
+var scoreText
+var nPulos = 0
+var downButton
+var upButton
 
 function preload ()
 {
+    this.load.image('btn', 'assets/btn.png');
+
     this.load.image('sky', 'assets/sky.png');
     this.load.image('biblia', 'assets/biblia.png');
     this.load.image('ground', 'assets/platform.png');
@@ -77,10 +81,12 @@ function create ()
     platforms.create(3180, 230, 'groundPequeno');
     platforms.create(3580, 230, 'groundPequeno');
     
-    corote = this.physics.add.sprite(3580, 170,'corote');
+    corote = this.physics.add.sprite(3580, 170,'corote')
+    player = this.physics.add.sprite(100, 450, 'dude')
 
-    // Player
-    player = this.physics.add.sprite(100, 450, 'dude');
+    downButton = this.add.image(70, 650, 'btn').setInteractive()
+    upButton = this.add.image(170, 650, 'btn').setInteractive()
+
     
     // camera
     this.cameras.main.setBounds(0,0,1920*2, 700);
@@ -152,12 +158,20 @@ function create ()
    // quando player sobrepor uma estrela, chama o metodo collectStar
    this.physics.add.overlap(player, stars, collectStar, null, this);
    this.physics.add.overlap(player, biblias, encostarBiblia, null, this)
-   this.physics.add.overlap(player, corote, fimFase, null, this)
+   this.physics.add.overlap(player, corote, fimFase, null, this);
 }
 
 function update (){
 
-    if(player.body.touching.down){
+    // se for celular
+    if('ontouchstart' in window){
+
+        downButton.on('pointerout', andarEsquerda)
+
+        upButton.on('pointerout', andarDireita)
+    }
+
+    if(player.body.touching.down){ 
 
         nPulos = 0;
     }
@@ -176,39 +190,50 @@ function update (){
 
     if (cursors.left.isDown){
 
-        player.setVelocityX(-160);
-
-        player.anims.play('left', true);
+        andarEsquerda()
 
     }else if (cursors.right.isDown){
 
-        player.setVelocityX(160);
-
-        player.anims.play('right', true);
-    
+        andarDireita()
     }else{
 
-        player.setVelocityX(0);
+        player.setVelocityX(0)
 
-        player.anims.play('turn');
+        player.anims.play('turn')
     }
     
     if(Phaser.Input.Keyboard.JustDown(teclaPulo)){
 
         if(nPulos == 0 && player.body.touching.down){
     
-            nPulos++;
-            player.setVelocityY(-330);
-    
+            pular()
         }
         
         if(nPulos == 1 && !player.body.touching.down){
 
-            nPulos++;
-            player.setVelocityY(-330);
+            pular()
         }
     }
-    
+}
+
+function andarDireita(){
+
+    player.setVelocityX(160)
+
+    player.anims.play('right', true)
+}
+
+function andarEsquerda(){
+
+    player.setVelocityX(-160)
+
+    player.anims.play('left', true)
+}
+
+function pular(){
+
+    nPulos++
+    player.setVelocityY(-330)
 }
 
 // desativa estrela sobreposta pelo player
