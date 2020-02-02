@@ -166,9 +166,9 @@ function update (){
     // se for celular
     if('ontouchstart' in window){
 
-        downButton.on('pointerout', andarEsquerda)
+        downButton.on('pointerdown', andarEsquerda)
 
-        upButton.on('pointerout', andarDireita)
+        upButton.on('pointerdown', andarDireita)
     }
 
     if(player.body.touching.down){ 
