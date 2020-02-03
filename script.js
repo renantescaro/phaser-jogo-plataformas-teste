@@ -31,8 +31,8 @@ var score = 0
 var vida = 100
 var scoreText
 var nPulos = 0
-var downButton
-var upButton
+var btnAndarEsquerda
+var btnAndarDireita
 
 function preload ()
 {
@@ -64,39 +64,47 @@ function create ()
     chao = this.physics.add.staticGroup();
     
     // chão
-    platforms.create(400,  670, 'chao').setScale(2).refreshBody();
-    platforms.create(1100, 670, 'chao').setScale(2).refreshBody();
-    platforms.create(2500, 670, 'chao').setScale(2).refreshBody();
-    platforms.create(3500, 670, 'chao').setScale(2).refreshBody();
+    platforms.create(400,  670, 'chao').setScale(2).refreshBody()
+    platforms.create(1100, 670, 'chao').setScale(2).refreshBody()
+    platforms.create(2500, 670, 'chao').setScale(2).refreshBody()
+    platforms.create(3500, 670, 'chao').setScale(2).refreshBody()
     
     // plataformas
-    platforms.create(600,  545, 'ground');
-    platforms.create(1000, 360, 'ground');
-    platforms.create(1400, 300, 'ground');
-    platforms.create(2050, 400, 'ground');
-    platforms.create(2450, 400, 'groundPequeno');
-    platforms.create(2650, 400, 'groundPequeno');
-    platforms.create(2850, 400, 'groundPequeno');
-    platforms.create(3050, 450, 'groundPequeno');
-    platforms.create(3180, 230, 'groundPequeno');
-    platforms.create(3580, 230, 'groundPequeno');
+    platforms.create(600,  545, 'ground')
+    platforms.create(1000, 360, 'ground')
+    platforms.create(1400, 300, 'ground')
+    platforms.create(2050, 400, 'ground')
+    platforms.create(2450, 400, 'groundPequeno')
+    platforms.create(2650, 400, 'groundPequeno')
+    platforms.create(2850, 400, 'groundPequeno')
+    platforms.create(3050, 450, 'groundPequeno')
+    platforms.create(3180, 230, 'groundPequeno')
+    platforms.create(3580, 230, 'groundPequeno')
     
     corote = this.physics.add.sprite(3580, 170,'corote')
     player = this.physics.add.sprite(100, 450, 'dude')
-
-    downButton = this.add.image(70, 650, 'btn').setInteractive()
-    upButton = this.add.image(170, 650, 'btn').setInteractive()
-
     
+    btnAndarEsquerda = this.add.sprite(70, 650, 'btn').setInteractive()
+    btnAndarDireita = this.add.sprite(170, 650, 'btn').setInteractive()
+
+    // se for celular
+    if('ontouchstart' in window){
+
+        btnAndarEsquerda.on('pointerdown', andarEsquerda)
+        btnAndarEsquerda.on('pointerup', parar)
+        btnAndarDireita.on('pointerdown', andarDireita)
+        btnAndarDireita.on('pointerup', parar)
+    }
+
     // camera
-    this.cameras.main.setBounds(0,0,1920*2, 700);
-    this.physics.world.setBounds(0,0,1920*2,700);
-    this.cameras.main.startFollow(player, true, 0.05, 0.05);
+    this.cameras.main.setBounds(0,0,1920*2, 700)
+    this.physics.world.setBounds(0,0,1920*2,700)
+    this.cameras.main.startFollow(player, true, 0.05, 0.05)
     
-    player.setBounce(0);
-    player.setCollideWorldBounds(true);
+    player.setBounce(0)
+    player.setCollideWorldBounds(true)
     
-    this.physics.add.collider(player, platforms);
+    this.physics.add.collider(player, platforms)
 
     // Animações
     this.anims.create({
@@ -104,19 +112,19 @@ function create ()
         frames: this.anims.generateFrameNumbers('dude', { start: -1, end: 3 }),
         frameRate: 10,
         repeat: -1
-    });
-
-    this.anims.create({
-        key: 'turn',
-        frames: [ { key: 'dude', frame: 4 } ],
-        frameRate: 20
-    });
-
+    })
+    
     this.anims.create({
         key: 'right',
         frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
         frameRate: 10,
         repeat: -1
+    })
+
+    this.anims.create({
+        key: 'turn',
+        frames: [ { key: 'dude', frame: 4 } ],
+        frameRate: 20
     });
 
     teclaEsc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
@@ -136,19 +144,7 @@ function create ()
     
     biblias = this.physics.add.group();
 
-    /*
-    // loop entre o grupo de estrelas
-    stars.children.iterate(function (child) {
-        
-        // seta a quicada da estrela entre 0.4 e 0.8
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-    });
-    */
-
    scoreText = this.add.text(100, 100, 'Pontos: 0  Vida: 100', { fontSize: '32px', fill: '#000' });
-   
-
-   //scoreText.startFollow(player, true, 0.05, 0.05);
 
    // adiciona colisão entre as estrelas e as plataformas
    this.physics.add.collider(stars, platforms);
@@ -162,14 +158,6 @@ function create ()
 }
 
 function update (){
-
-    // se for celular
-    if('ontouchstart' in window){
-
-        downButton.on('pointerdown', andarEsquerda)
-
-        upButton.on('pointerdown', andarDireita)
-    }
 
     if(player.body.touching.down){ 
 
@@ -197,9 +185,7 @@ function update (){
         andarDireita()
     }else{
 
-        player.setVelocityX(0)
-
-        player.anims.play('turn')
+        parar()
     }
     
     if(Phaser.Input.Keyboard.JustDown(teclaPulo)){
@@ -216,18 +202,22 @@ function update (){
     }
 }
 
-function andarDireita(){
-
-    player.setVelocityX(160)
-
-    player.anims.play('right', true)
-}
-
 function andarEsquerda(){
 
     player.setVelocityX(-160)
-
     player.anims.play('left', true)
+}
+
+function andarDireita(){
+
+    player.setVelocityX(160)
+    player.anims.play('right', true)
+}
+
+function parar(){
+
+    player.setVelocityX(0)
+	player.anims.play('turn')
 }
 
 function pular(){
