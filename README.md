@@ -1,7 +1,6 @@
-#The Doomer Game Br
+# The Doomer Game Br
 
-Joguinho de musica Russa de pessoas bads (Versão Brasil)
+### Meu primeiro contato com Phaser para desenvolvimento de jogos em JS
+#### Projeto foi apenas um teste com a Lib
 
-Testa ai:
-
-https://renantescaro.github.io/phaser-jogo-plataformas-teste/
+Testa ai: https://renantescaro.github.io/phaser-jogo-plataformas-teste/
